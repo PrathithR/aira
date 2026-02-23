@@ -1,0 +1,64 @@
+# ============================================================
+# AIRA .gitignore
+# ============================================================
+
+# --- Environment & Secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.python-version
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Data (runtime-generated, not source code) ---
+data/*
+!data/.gitkeep
+
+# --- Logs & temp (runtime-generated) ---
+logs/
+*.log
+litellm_logs/
+tmp/
+uploads/
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Testing & Linting ---
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- Google OAuth credentials file (if stored locally) ---
+credentials.json
+token.json

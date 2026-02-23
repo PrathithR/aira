@@ -1,0 +1,66 @@
+# ============================================================
+# AIRA .dockerignore
+# ============================================================
+
+# --- Version control ---
+.git
+.gitignore
+.gitattributes
+
+# --- Environment & secrets (NEVER ship .env into images) ---
+.env
+.env.*
+secrets/
+credentials/
+
+# --- IDE / Editor ---
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# --- Python artifacts ---
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+dist/
+build/
+.eggs/
+venv/
+.venv/
+.python-version
+
+# --- Testing & coverage ---
+.pytest_cache
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+tests/
+scripts/
+
+# --- Docker (don't nest compose files into image) ---
+docker-compose*.yml
+Dockerfile
+
+# --- Data (DB created at runtime, not baked into image) ---
+data/*.db
+data/*.db-journal
+
+# --- Logs & temp (runtime-generated, never bake in) ---
+logs/
+*.log
+litellm_logs/
+tmp/
+uploads/
+
+# --- Docs (not needed at runtime) ---
+*.md
+LICENSE
+docs/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db

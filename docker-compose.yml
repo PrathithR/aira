@@ -1,0 +1,27 @@
+# ============================================================
+# AIRA - Docker Compose (PRODUCTION)
+# Usage: docker compose up --build
+# For development: docker compose -f docker-compose.dev.yml up --build
+# ============================================================
+
+services:
+  aira:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aira-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Only persist data — source is baked into the image
+      - aira-data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
+      - DEBUG=false
+    restart: unless-stopped
+
+volumes:
+  aira-data:
+    driver: local
