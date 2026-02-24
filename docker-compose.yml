@@ -9,16 +9,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aira-backend
     ports:
       - "8000:8000"
     volumes:
       # Only persist data — source is baked into the image
-      - aira-data:/app/data
+      - aira-data:/aira/data
     env_file:
       - .env
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/aira
       - DEBUG=false
     restart: unless-stopped
 

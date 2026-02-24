@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Working directory
-WORKDIR /app
+WORKDIR /aira
 
 # Install Python dependencies first (layer caching)
 COPY pyproject.toml .
@@ -28,13 +28,13 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY . .
 
 # Create non-root user and hand over ownership
-RUN groupadd --gid 1000 aira \
-    && useradd --uid 1000 --gid aira --shell /bin/bash --create-home aira \
-    && mkdir -p /app/data \
-    && chown -R aira:aira /app
+RUN groupadd --gid 1000 appuser \
+    && useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser \
+    && mkdir -p /aira/data \
+    && chown -R appuser:appuser /aira
 
 # Switch to non-root user
-USER aira
+USER appuser
 
 # Expose FastAPI port
 EXPOSE 8000
@@ -45,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 # Production CMD — no --reload, single worker for Phase 0
 # Dev compose overrides this with --reload
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

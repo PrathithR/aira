@@ -8,20 +8,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aira-dev
     ports:
       - "8000:8000"
     volumes:
       # Live code reload — mount source into container
-      - ./app:/app/app
-      - ./data:/app/data
-      - ./scripts:/app/scripts
-      - ./tests:/app/tests
+      - ./src:/aira/src
+      - ./data:/aira/data
+      - ./scripts:/aira/scripts
+      - ./tests:/aira/tests
     env_file:
       - .env
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/aira
       - DEBUG=true
     # Override production CMD with --reload for hot reloading
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     restart: unless-stopped
