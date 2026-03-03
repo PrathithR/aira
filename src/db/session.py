@@ -55,3 +55,7 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
         except Exception:
             await session.rollback()
             raise
+
+# NOTE:
+# If we introduce background jobs / scheduled tasks,
+# add an async session_scope() context manager here.
