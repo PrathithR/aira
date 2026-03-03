@@ -67,8 +67,9 @@ class Settings(BaseSettings):
     # ==========================================================
     # Database
     # ==========================================================
-    database_url: str = "sqlite:///./data/aira.db"
-
+    database_url: str = "sqlite+aiosqlite:///./data/aira.db"
+    db_echo: bool = False  # set DB_ECHO=true in .env to see SQL logs
+    
     # ==========================================================
     # Notifications
     # ==========================================================
