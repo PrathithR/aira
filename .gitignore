@@ -62,3 +62,4 @@ htmlcov/
 # --- Google OAuth credentials file (if stored locally) ---
 credentials.json
 token.json
+.claude/
