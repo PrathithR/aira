@@ -185,3 +185,11 @@ class Credential(Base):
 
     # Relationships
     integration: Mapped["Integration"] = relationship(back_populates="credentials")
+
+    #Override repr to avoid accidentally logging secrets
+    def __repr__(self) -> str:
+        return (
+            f"Credential(id={self.id}, integration_id={self.integration_id}, "
+            f"status={self.status}, is_primary={self.is_primary}, "
+            f"created_at={self.created_at}, updated_at={self.updated_at})"
+        )
