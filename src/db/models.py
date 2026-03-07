@@ -75,7 +75,6 @@ class Integration(Base):
     __tablename__ = "integrations"
     __table_args__ = (
         UniqueConstraint("user_id", "provider", name="uq_user_provider"),
-        Index("ix_integrations_user_provider", "user_id", "provider"),
     )
 
     id: Mapped[str] = mapped_column(
