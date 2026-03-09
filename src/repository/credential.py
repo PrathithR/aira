@@ -97,6 +97,7 @@ class CredentialRepository(BaseRepository[Credential]):
         for key, value in fields.items():
             if key not in _ENCRYPTED_FIELDS:
                 raise ValueError(f"Use update for {key}")
+        for key, value in fields.items():
             setattr(credential, key, encrypt_value(value))
 
     async def update(self, credential_id: str, **fields) -> None:
@@ -109,4 +110,5 @@ class CredentialRepository(BaseRepository[Credential]):
                 raise ValueError(f"Use update_encrypted for {key}")
             if key not in columns:
                 raise ValueError(f"Unknown field: {key}")
+        for key, value in fields.items():    
             setattr(credential, key, value)
