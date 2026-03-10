@@ -49,8 +49,8 @@ class CredentialRepository(BaseRepository[Credential]):
             self._expunge_and_decrypt(credential)
         return credential
 
-    async def get_all(self) -> list[Credential]:
-        credentials = await super().get_all()
+    async def get_all(self, limit: int | None = 100) -> list[Credential]:
+        credentials = await super().get_all(limit)
         for cred in credentials:
             self._expunge_and_decrypt(cred)
         return credentials
