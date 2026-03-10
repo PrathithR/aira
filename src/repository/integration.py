@@ -31,3 +31,4 @@ class IntegrationRepository(BaseRepository[Integration]):
             )
         result = await self.session.scalars(stmt)
         return list(result.all())
+    

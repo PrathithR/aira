@@ -57,9 +57,19 @@ class CredentialRepository(BaseRepository[Credential]):
 
     async def create(self, entity: Credential) -> Credential:
         self._encrypt(entity)
-        await super().create(entity)
+        try:
+            await super().create(entity)
+        except Exception:
+            self._decrypt(entity)  # in case of error, restore to plaintext
+            raise
         self._expunge_and_decrypt(entity)
         return entity
+
+    async def delete(self, credential_id: str) -> None:  # type: ignore[override]
+        credential = await self.session.get(Credential, credential_id)
+        if credential is None:
+            raise ValueError(f"Credential {credential_id} not found")
+        await self.session.delete(credential)
 
     # ------------------------------------------------------------------
     # Queries

@@ -44,3 +44,4 @@ class BaseRepository(Generic[T]):
 
     async def delete(self, entity: T) -> None:
         await self.session.delete(entity)
+        

@@ -13,3 +13,4 @@ class UserRepository(BaseRepository[User]):
         stmt = select(User).where(User.email == email)
         result = await self.session.scalars(stmt)
         return result.one_or_none()
+    
