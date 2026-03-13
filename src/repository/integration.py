@@ -1,3 +1,5 @@
+# @greptile credential to integration 1-to-1
+
 from sqlalchemy import select
 
 from src.db.enums import IntegrationProvider, IntegrationStatus
