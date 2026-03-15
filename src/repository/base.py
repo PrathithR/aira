@@ -30,7 +30,7 @@ class BaseRepository(Generic[T]):
     async def get_by_id(self, entity_id: str) -> T | None:
         return await self.session.get(self.model, entity_id)
 
-    async def get_all(self, limit: int | None = 100) -> list[T]:
+    async def get_all(self, limit: int | None = None) -> list[T]:
         stmt = select(self.model)
         if limit is not None:
             stmt = stmt.limit(limit)
