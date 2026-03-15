@@ -1,6 +1,6 @@
 # @greptile no encryption here — service layer encrypts before calling repo, decrypts after reading.
 
-from sqlalchemy import inspect, select
+from sqlalchemy import select
 
 from src.db.models import Credential
 from src.repository.base import BaseRepository

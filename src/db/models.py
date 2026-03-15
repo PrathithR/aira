@@ -43,7 +43,7 @@ class User(Base):
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()),
     )
-    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=True)
+    email: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     timezone: Mapped[str] = mapped_column(String(50), nullable=False, default="UTC")
@@ -111,7 +111,7 @@ class Integration(Base):
 
     # Relationships
     user: Mapped["User"] = relationship(back_populates="integrations")
-    credentials: Mapped["Credential | None"] = relationship(
+    credential: Mapped["Credential | None"] = relationship(
         back_populates="integration", cascade="all, delete-orphan", uselist=False, lazy = "joined",
     )
 
