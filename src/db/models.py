@@ -59,6 +59,10 @@ class User(Base):
         back_populates="user", cascade="all, delete-orphan", lazy="selectin",
     )
 
+    #Override repr to avoid accidentally logging secrets
+    def __repr__(self) -> str:
+        return f"User(id={self.id}, username={self.username})"
+    
 
 # ──────────────────────────────────────────────
 #  Integrations
@@ -180,7 +184,7 @@ class Credential(Base):
     )
 
     # Relationships
-    integration: Mapped["Integration"] = relationship(back_populates="credentials")
+    integration: Mapped["Integration"] = relationship(back_populates="credential")
 
     #Override repr to avoid accidentally logging secrets
     def __repr__(self) -> str:

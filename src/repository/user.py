@@ -20,6 +20,3 @@ class UserRepository(BaseRepository[User]):
         result = await self.session.scalars(stmt)
         return result.one_or_none()
     
-    def __repr__(self) -> str:
-        return f"User(id={self.id}, username={self.username})"
-    
