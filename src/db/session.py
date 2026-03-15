@@ -23,7 +23,7 @@ _connect_args = (
 
 engine = create_async_engine(
     settings.database_url,
-    echo=settings.db_echo,          # set DB_ECHO=true in .env to see SQL
+    echo=settings.db_echo,          # set DB_ECHO=true in .env to see SQL logging
     connect_args=_connect_args,
 )
 
