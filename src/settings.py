@@ -71,6 +71,11 @@ class Settings(BaseSettings):
     db_echo: bool = False  # set DB_ECHO=true in .env to see SQL logs
     
     # ==========================================================
+    # CORS
+    # ==========================================================
+    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+
+    # ==========================================================
     # Notifications
     # ==========================================================
     ntfy_server: str = "https://ntfy.sh"

@@ -11,11 +11,9 @@ from datetime import datetime, timezone
 
 from sqlalchemy import (
     JSON,
-    Boolean,
     DateTime,
     Enum,
     ForeignKey,
-    Index,
     String,
     Text,
     UniqueConstraint,
@@ -45,8 +43,9 @@ class User(Base):
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()),
     )
-    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-    display_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    email: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     timezone: Mapped[str] = mapped_column(String(50), nullable=False, default="UTC")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow,
@@ -60,6 +59,10 @@ class User(Base):
         back_populates="user", cascade="all, delete-orphan", lazy="selectin",
     )
 
+    #Override repr to avoid accidentally logging secrets
+    def __repr__(self) -> str:
+        return f"User(id={self.id}, username={self.username})"
+    
 
 # ──────────────────────────────────────────────
 #  Integrations
@@ -75,7 +78,6 @@ class Integration(Base):
     __tablename__ = "integrations"
     __table_args__ = (
         UniqueConstraint("user_id", "provider", name="uq_user_provider"),
-        Index("ix_integrations_user_provider", "user_id", "provider"),
     )
 
     id: Mapped[str] = mapped_column(
@@ -95,6 +97,8 @@ class Integration(Base):
         nullable=False,
     )
     scopes: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    provider_account_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    provider_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     status: Mapped[IntegrationStatus] = mapped_column(
         Enum(IntegrationStatus, name="integration_status",
              values_callable=lambda e: [m.value for m in e]),
@@ -111,8 +115,8 @@ class Integration(Base):
 
     # Relationships
     user: Mapped["User"] = relationship(back_populates="integrations")
-    credentials: Mapped[list["Credential"]] = relationship(
-        back_populates="integration", cascade="all, delete-orphan", lazy="selectin",
+    credential: Mapped["Credential | None"] = relationship(
+        back_populates="integration", cascade="all, delete-orphan", uselist=False, lazy = "joined",
     )
 
 
@@ -124,7 +128,7 @@ class Credential(Base):
     """
     Authentication secrets for an integration.
 
-    ENCRYPTED at rest (Fernet AES-128-CBC + HMAC):
+    ENCRYPTED at service layer (Fernet AES-128-CBC + HMAC):
         access_token, refresh_token, api_key, password, webhook_secret
 
     NOT encrypted (not secrets):
@@ -139,15 +143,12 @@ class Credential(Base):
     No direct FK to users. Ownership chain: credential → integration → user.
     """
     __tablename__ = "credentials"
-    __table_args__ = (
-        Index("ix_credentials_integration_primary", "integration_id", "is_primary"),
-    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()),
     )
     integration_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("integrations.id", ondelete="CASCADE"), nullable=False,
+        String(36), ForeignKey("integrations.id", ondelete="CASCADE"), nullable=False, unique=True,
     )
 
     # OAuth2 (access_token + refresh_token encrypted)
@@ -175,7 +176,6 @@ class Credential(Base):
         nullable=False,
         default=CredentialStatus.ACTIVE,
     )
-    is_primary: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow,
     )
@@ -184,12 +184,12 @@ class Credential(Base):
     )
 
     # Relationships
-    integration: Mapped["Integration"] = relationship(back_populates="credentials")
+    integration: Mapped["Integration"] = relationship(back_populates="credential")
 
     #Override repr to avoid accidentally logging secrets
     def __repr__(self) -> str:
         return (
             f"Credential(id={self.id}, integration_id={self.integration_id}, "
-            f"status={self.status}, is_primary={self.is_primary}, "
+            f"status={self.status},"
             f"created_at={self.created_at}, updated_at={self.updated_at})"
         )

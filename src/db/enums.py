@@ -38,3 +38,4 @@ class TaskStatus(str, enum.Enum):
     PENDING = "pending"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
+    
