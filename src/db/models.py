@@ -190,6 +190,6 @@ class Credential(Base):
     def __repr__(self) -> str:
         return (
             f"Credential(id={self.id}, integration_id={self.integration_id}, "
-            f"status={self.status},"
+            f"status={self.status}, "
             f"created_at={self.created_at}, updated_at={self.updated_at})"
         )
