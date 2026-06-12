@@ -46,3 +46,9 @@ dev = [
     "pytest-asyncio>=1.3.0",
     "ruff>=0.4",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: mark test as an integration test requiring real API keys.",
+]
+
